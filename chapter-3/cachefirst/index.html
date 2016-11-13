@@ -12,11 +12,11 @@
 <body>
   <h1>Hello Service Worker Cache!</h1>
   <!-- JavaScript -->
-  <script async src="/js/script.js"></script>
+  <script async src="./js/script.js"></script>
   <script>
   // Register the service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw-cachefirst.js').then(function(registration) {
+    navigator.serviceWorker.register('./sw-cachefirst.js').then(function(registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }).catch(function(err) {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello Caching World!</title>
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <style>
+    body{ font-family: 'Lato', sans-serif; }
+    h1 { text-align: center; font-size: 48px; }
+  </style>
+</head>
+<body>
+  <h1>Hello Service Worker Cache!</h1>
+  <!-- JavaScript -->
+  <script async src="/js/script.js"></script>
+  <script>
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw-cachefirst.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  }
+  </script>
+</body>
+</html>

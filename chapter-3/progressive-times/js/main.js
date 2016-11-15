@@ -1,28 +1,34 @@
-// Retrieve data for a given URL
 function retrieveData(url) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( 'GET', url, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return JSON.parse(xmlHttp.responseText);
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var result = JSON.parse(this.responseText);
+        buildWebPage(result);
+    }
+  };
+  xhttp.open('GET', url, true);
+  xhttp.send();
 }
 
 // Get a value from the querystring
 function findGetParameter(parameterName) {
-    var result = null,
-        tmp = [];
-    var items = location.search.substr(1).split("&");
-    for (var index = 0; index < items.length; index++) {
-        tmp = items[index].split("=");
-        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-    }
-    return result;
+  var result = null,
+  tmp = [];
+  var items = location.search.substr(1).split("&");
+  for (var index = 0; index < items.length; index++) {
+    tmp = items[index].split("=");
+    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+  }
+  return result;
 }
 
 // Load the latest news data and populate content
 function loadLatestNews(){
   var dataUrl = './data/latest.json';
   var result = retrieveData(dataUrl);
+}
 
+function buildWebPage(result) {
   // Build up our HTML
   var latestNews = '';
 

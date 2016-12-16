@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Progressive Times - Article</title>
+  <link href="https://fonts.googleapis.com/css?family=Raleway|Merriweather" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./css/site.css">
+</head>
+<body>
+  <!-- header -->
+  <div id="article-header">
+    <div id="article-title"></div>
+  </div>
+  <!-- article -->
+  <p id="article"></p>
+  <hr>
+  <!-- scripts -->
+  <script async src="./js/article.js"></script>
+  <script>
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(function(registration) {
+      // Registration was successful
+    });
+  }
+  </script>
+</body>
+</html>

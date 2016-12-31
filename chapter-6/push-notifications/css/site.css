@@ -1,0 +1,18 @@
+body{ font-family: 'Raleway', sans-serif; }
+h1 { text-align: center;font-size: 60px;font-family: 'Merriweather', cursive; margin-top: 0px;}
+h6 {text-align: center; font-size: 20px; margin-top: -32px;}
+hr { border-top: 1px dashed #8c8b8b; width: 300px; }
+a { text-decoration: none; color: black; }
+a:hover { text-decoration: underline; }
+p { width: 70%; margin: auto; text-align: center;padding-bottom: 20px; font-size: 18px; }
+#header { background-color: gold; width: 100%; position: absolute; top: 0; left: 0; height: 200px;}
+#latest { text-align: center; margin-top: 220px; }
+#article-header { background-color: #03A9F4; width: 100%; position: absolute; top: 0; left: 0; height: 200px; }
+#article-title { text-align: center; font-size: 54px; font-family: 'Merriweather', cursive; color: white;padding-top: 50px; }
+#article { margin-top: 220px;}
+#logo { margin-left: auto; margin-right: auto; width: 50px; display: block; padding-top: 25px; }
+
+@media screen and (max-width: 550px) {
+    h1 { text-align: center;font-size: 40px;font-family: 'Merriweather', cursive; margin-top: 0px;}
+    #article-title { text-align: center; font-size: 40px; font-family: 'Merriweather', cursive; color: white;padding-top: 50px; }
+}

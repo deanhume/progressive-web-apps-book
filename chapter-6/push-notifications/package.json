@@ -1,0 +1,16 @@
+{
+  "name": "push-notifications",
+  "version": "1.0.0",
+  "description": "Simple example using push notifications",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Dean Hume",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "web-push": "^3.2.1"
+  }
+}

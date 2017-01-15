@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 // Set CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -48,14 +48,22 @@ app.post('/register', function (req, res) {
     }
   };
 
-  webpush.sendNotification(pushSubscription, 'Thank you for registering')
-          .then(result => { 
-            console.log(result);
-            res.sendStatus(201);
-          })
-          .catch(err => {
-            console.log(err);  
-          });
+  var body = 'Thank you for registering';
+  var icon = '';
+
+  webpush.sendNotification(pushSubscription,
+    JSON.stringify({
+      msg: body,
+      url: '/',
+      icon: './images/homescreen.png'
+    }))
+    .then(result => {
+      console.log(result);
+      res.sendStatus(201);
+    })
+    .catch(err => {
+      console.log(err);
+    });
 
 });
 

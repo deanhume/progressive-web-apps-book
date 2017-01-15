@@ -18,20 +18,19 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('push', function(event) {  
-	debugger;
-  console.log('Received a push message', event);
 
-  var title = 'Notification';  
-  var body = 'There is newly updated content available on the site. Click to see more.';  
-  var icon = 'https://raw.githubusercontent.com/deanhume/typography/gh-pages/icons/typography.png';  
-  var tag = 'simple-push-demo-notification-tag';
+  var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
+
+  var title = 'Progressive Times';  
+
+  debugger;
   
   event.waitUntil(  
-    self.registration.showNotification(title, {  
-       body: body,  
-       icon: icon,  
-       tag: tag  
-     })  
+    self.registration.showNotification(title, {
+      body: payload.msg,
+      url: payload.url,
+      icon: payload.icon
+    })  
    );  
 });
 
@@ -40,6 +39,9 @@ self.addEventListener('notificationclick', function(event) {
   // Android doesn't close the notification when you click on it  
   // See: http://crbug.com/463146  
   event.notification.close();
+
+  var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
+  
 
   // This looks to see if the current is already open and  
   // focuses if it is  
@@ -54,7 +56,7 @@ self.addEventListener('notificationclick', function(event) {
           return client.focus();  
       }  
       if (clients.openWindow) {
-        return clients.openWindow('https://deanhume.github.io/typography');  
+        return clients.openWindow(payload.url);  
       }
     })
   );

@@ -49,7 +49,10 @@ app.post('/register', function (req, res) {
   };
 
   webpush.sendNotification(pushSubscription, 'Thank you for registering')
-          .then(result => res.sendStatus(201))
+          .then(result => { 
+            console.log(result);
+            res.sendStatus(201);
+          })
           .catch(err => {
             console.log(err);  
           });

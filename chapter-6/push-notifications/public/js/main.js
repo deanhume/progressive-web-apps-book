@@ -35,7 +35,7 @@ function buildWebPage(result) {
   // Loop through the results
   for (var i = 0; i < result.latestNews.length; i++) {
 
-    var title = '<h2><a href="./article.html?id=' + result.latestNews[i].id + '">' + result.latestNews[i].title + '</a></h2>';
+    var title = '<h2><a href="./article?id=' + result.latestNews[i].id + '">' + result.latestNews[i].title + '</a></h2>';
     var description = '<p>' + result.latestNews[i].description + '</p>'
 
     latestNews += title + description;

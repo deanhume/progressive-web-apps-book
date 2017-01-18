@@ -33,78 +33,72 @@
   var authSecret;
 
   // We need to convert the VAPID key to a base64 string when we subscribe
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
 
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
   }
-  return outputArray;
-}
 
-function determineAppServerKey() {
-  var vapidPublicKey = 'BAyb_WgaR0L0pODaR7wWkxJi__tWbM1MPBymyRDFEGjtDCWeRYS9EF7yGoCHLdHJi6hikYdg4MuYaK0XoD0qnoY';
-  return urlBase64ToUint8Array(vapidPublicKey);
-}
+  function determineAppServerKey() {
+    var vapidPublicKey = 'BAyb_WgaR0L0pODaR7wWkxJi__tWbM1MPBymyRDFEGjtDCWeRYS9EF7yGoCHLdHJi6hikYdg4MuYaK0XoD0qnoY';
+    return urlBase64ToUint8Array(vapidPublicKey);
+  }
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(function(registration) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
 
-      // registration.pushManager.getSubscription()
-      //   .then(function(subscription) {
+        return registration.pushManager.getSubscription()
+          .then(function(subscription) {
 
-      //       debugger;
-      //       if (subscription) {
-      //         // We already have a subscription, let's not add them again
-      //         return;
-      //       }
-      //     }.catch(function(err) {
-      //       console.warn('Error during getSubscription()', err);
-      //     }));
+              if (subscription) {
+                // We already have a subscription, let's not add them again
+                return;
+              }
 
+              return registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: determineAppServerKey()
+                })
+                .then(function(subscription) {
 
-registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: determineAppServerKey()
-              })
-              .then(function(subscription) {
+                  // TODO: Send the subscription subscription.endpoint
+                  // to your server and save it to send a push message
+                  // at a later date
+                  var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
+                  key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
+                  var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
+                  authSecret = rawAuthSecret ?
+                    btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
 
-                // TODO: Send the subscription subscription.endpoint
-                // to your server and save it to send a push message
-                // at a later date
-                var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-                key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-                var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-                authSecret = rawAuthSecret ?
-                  btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
+                  endpoint = subscription.endpoint;
 
-                endpoint = subscription.endpoint;
-
-                return fetch('http://localhost:3111/register', {
-                  method: 'post',
-                  headers: new Headers({
-                    'content-type': 'application/json'
-                  }),
-                  body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    key: key,
-                    authSecret: authSecret,
-                  }),
+                  return fetch('http://localhost:3111/register', {
+                    method: 'post',
+                    headers: new Headers({
+                      'content-type': 'application/json'
+                    }),
+                    body: JSON.stringify({
+                      endpoint: subscription.endpoint,
+                      key: key,
+                      authSecret: authSecret,
+                    }),
+                  });
                 });
-
-              });
-
-        }).catch(function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  }
+            });
+          }).catch(function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    }
   </script>
 </body>
 

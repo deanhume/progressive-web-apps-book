@@ -1,22 +1,19 @@
 const webpush = require('web-push');
 const express = require('express');
 var bodyParser = require('body-parser');
+var path    = require('path');
 const app = express();
 
+// Express setup
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-// Set CORS
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-// VAPID keys should only be generated only once.
-//const vapidKeys = webpush.generateVAPIDKeys();
+function saveRegistrationDetails(endpoint, key, authSecret){
+  // Save the users details in a DB
+}
 
 webpush.setVapidDetails(
   'mailto:contact@deanhume.com',
@@ -24,14 +21,18 @@ webpush.setVapidDetails(
   'p6YVD7t8HkABoez1CvVJ5bl7BnEdKUu5bSyVjyxMBh0'
 );
 
+// Home page
 app.get('/', function (req, res) {
-  res.send('success');
+  res.sendFile(path.join(__dirname+'/index.html'));
+});
+
+// Article page
+app.get('/article', function (req, res) {
+  res.sendFile(path.join(__dirname+'/article.html'));
 });
 
 // Send a message
 app.post('/sendMessage', function (req, res) {
-  // This is the same output of calling JSON.stringify on a PushSubscription
-  // This information comes from the server
 
 });
 
@@ -39,23 +40,28 @@ app.post('/sendMessage', function (req, res) {
 app.post('/register', function (req, res) {
 
   var endpoint = req.body.endpoint;
+  var authSecret = req.body.authSecret;
+  var key = req.body.key;
+
+  // Store the users registration details
+  saveRegistrationDetails(endpoint, key, authSecret);
 
   const pushSubscription = {
     endpoint: req.body.endpoint,
     keys: {
-      auth: req.body.authSecret,
-      p256dh: req.body.key
+      auth: authSecret,
+      p256dh: key
     }
   };
 
-  var body = 'Thank you for registering';
-  var icon = '';
+  var body = 'Breaking News: Austrian village churches hire bouncers';
+  var iconUrl = 'https://raw.githubusercontent.com/deanhume/progressive-web-apps-book/master/chapter-6/push-notifications/images/homescreen.png';
 
   webpush.sendNotification(pushSubscription,
     JSON.stringify({
       msg: body,
       url: '/',
-      icon: './images/homescreen.png'
+      icon: iconUrl
     }))
     .then(result => {
       console.log(result);

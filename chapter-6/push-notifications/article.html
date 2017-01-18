@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Progressive Times - Article</title>
   <link href="https://fonts.googleapis.com/css?family=Raleway|Merriweather" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./css/site.css">
+    <!-- Adress bar styling -->
+  <meta name="theme-color" content="#FFD700">
+  <meta name="msapplication-navbutton-color" content="#FFD700">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.json">
 </head>
+
 <body>
   <!-- header -->
   <div id="article-header">
@@ -18,12 +26,79 @@
   <!-- scripts -->
   <script async src="./js/article.js"></script>
   <script>
-  // Register the service worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(function(registration) {
-      // Registration was successful
-    });
+  var endpoint;
+  var key;
+  var authSecret;
+
+  // We need to convert the VAPID key to a base64 string when we subscribe
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
   }
+
+  function determineAppServerKey() {
+    var vapidPublicKey = 'BAyb_WgaR0L0pODaR7wWkxJi__tWbM1MPBymyRDFEGjtDCWeRYS9EF7yGoCHLdHJi6hikYdg4MuYaK0XoD0qnoY';
+    return urlBase64ToUint8Array(vapidPublicKey);
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+
+        return registration.pushManager.getSubscription()
+          .then(function(subscription) {
+
+              debugger;
+              if (subscription) {
+                // We already have a subscription, let's not add them again
+                return;
+              }
+
+              retrun registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: determineAppServerKey()
+                })
+                .then(function(subscription) {
+
+                  // TODO: Send the subscription subscription.endpoint
+                  // to your server and save it to send a push message
+                  // at a later date
+                  var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
+                  key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
+                  var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
+                  authSecret = rawAuthSecret ?
+                    btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
+
+                  endpoint = subscription.endpoint;
+
+                  return fetch('http://localhost:3111/register', {
+                    method: 'post',
+                    headers: new Headers({
+                      'content-type': 'application/json'
+                    }),
+                    body: JSON.stringify({
+                      endpoint: subscription.endpoint,
+                      key: key,
+                      authSecret: authSecret,
+                    }),
+                  });
+                });
+            });
+          }).catch(function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    }
   </script>
 </body>
+
 </html>

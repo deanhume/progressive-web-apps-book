@@ -11,8 +11,8 @@ self.addEventListener('install', event => {
       './css/site.css',
       './data/latest.json',
       './data/data-1.json',
-      './article.html',
-      './index.html'
+      './article',
+      './'
     ]))
   );
 });
@@ -22,8 +22,6 @@ self.addEventListener('push', function(event) {
   var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
 
   var title = 'Progressive Times';  
-
-  debugger;
   
   event.waitUntil(  
     self.registration.showNotification(title, {
@@ -42,7 +40,6 @@ self.addEventListener('notificationclick', function(event) {
 
   var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
   
-
   // This looks to see if the current is already open and  
   // focuses if it is  
   event.waitUntil(

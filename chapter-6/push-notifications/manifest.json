@@ -11,9 +11,7 @@
       "type": "image/png"
     }
   ],
-  "gcm_sender_id": "57874135625436178",  
-    "gcm_user_visible_only": true,
-    "permissions": [
-    "gcm"
-    ]  
+  "permissions": [
+  "gcm"
+  ]  
 }

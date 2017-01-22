@@ -1,7 +1,7 @@
 const webpush = require('web-push');
 const express = require('express');
 var bodyParser = require('body-parser');
-var path    = require('path');
+var path = require('path');
 const app = express();
 
 // Express setup
@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-function saveRegistrationDetails(endpoint, key, authSecret){
+function saveRegistrationDetails(endpoint, key, authSecret) {
   // Save the users details in a DB
 }
 
@@ -23,17 +23,46 @@ webpush.setVapidDetails(
 
 // Home page
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname+'/index.html'));
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 // Article page
 app.get('/article', function (req, res) {
-  res.sendFile(path.join(__dirname+'/article.html'));
+  res.sendFile(path.join(__dirname + '/article.html'));
 });
 
 // Send a message
 app.post('/sendMessage', function (req, res) {
 
+  var endpoint = req.body.endpoint;
+  var authSecret = req.body.authSecret;
+  var key = req.body.key;
+
+  const pushSubscription = {
+    endpoint: req.body.endpoint,
+    keys: {
+      auth: authSecret,
+      p256dh: key
+    }
+  };
+
+  var body = 'Breaking News: Nose picking ban for Manila police';
+  var iconUrl = 'https://raw.githubusercontent.com/deanhume/progressive-web-apps-book/master/chapter-6/push-notifications/public/images/homescreen.png';
+
+  webpush.sendNotification(pushSubscription,
+    JSON.stringify({
+      msg: body,
+      url: 'http://localhost:3111/article?id=1',
+      icon: iconUrl,
+      type: 'actionMessage'
+    }))
+    .then(result => {
+      console.log(result);
+      res.sendStatus(201);
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 // Register the user
@@ -54,14 +83,15 @@ app.post('/register', function (req, res) {
     }
   };
 
-  var body = 'Breaking News: Austrian village churches hire bouncers';
-  var iconUrl = 'https://raw.githubusercontent.com/deanhume/progressive-web-apps-book/master/chapter-6/push-notifications/images/homescreen.png';
+  var body = 'Thank you for registering';
+  var iconUrl = 'https://raw.githubusercontent.com/deanhume/progressive-web-apps-book/master/chapter-6/push-notifications/public/images/homescreen.png';
 
   webpush.sendNotification(pushSubscription,
     JSON.stringify({
       msg: body,
-      url: '/',
-      icon: iconUrl
+      url: 'https://localhost:3111',
+      icon: iconUrl,
+      type: 'register'
     }))
     .then(result => {
       console.log(result);

@@ -14,7 +14,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="./manifest.json">
 </head>
-
 <body>
   <!-- header -->
   <div id="article-header">
@@ -25,7 +24,7 @@
   <hr>
   <!-- scripts -->
   <script async src="./js/article.js"></script>
-  <script>
+    <script>
   var endpoint;
   var key;
   var authSecret;
@@ -57,13 +56,12 @@
         return registration.pushManager.getSubscription()
           .then(function(subscription) {
 
-              debugger;
               if (subscription) {
                 // We already have a subscription, let's not add them again
                 return;
               }
 
-              retrun registration.pushManager.subscribe({
+              return registration.pushManager.subscribe({
                   userVisibleOnly: true,
                   applicationServerKey: determineAppServerKey()
                 })
@@ -90,7 +88,8 @@
                       key: key,
                       authSecret: authSecret,
                     }),
-                  });
+                  })
+
                 });
             });
           }).catch(function(err) {
@@ -100,5 +99,4 @@
     }
   </script>
 </body>
-
 </html>

@@ -33,7 +33,7 @@ function timeout(delay) {
 function resolveFirstPromise(promises) {
   return new Promise((resolve, reject) => {
 
-    const promises = promises.map(p => Promise.resolve(p));
+    promises = promises.map(p => Promise.resolve(p));
 
     promises.forEach(p => p.then(resolve));
 

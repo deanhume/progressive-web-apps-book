@@ -32,11 +32,11 @@ function timeout(delay) {
 
 function resolveFirstPromise(promises) {
   return new Promise((resolve, reject) => {
-    // make sure promises are all promises
-    promises = promises.map(p => Promise.resolve(p));
-    // resolve this promise as soon as one resolves
+
+    const promises = promises.map(p => Promise.resolve(p));
+
     promises.forEach(p => p.then(resolve));
-    // reject if all promises reject
+
     promises.reduce((a, b) => a.catch(() => b))
       .catch(() => reject(Error("All failed")));
   });

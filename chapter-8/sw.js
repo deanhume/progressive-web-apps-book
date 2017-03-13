@@ -5,29 +5,29 @@ const offlineUrl = 'offline-page.html';
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheName)
-    .then(cache => cache.addAll([
-      './js/main.js',
-      './js/article.js',
-      './images/newspaper.svg',
-      './css/site.css',
-      './data/latest.json',
-      './data/data-1.json',
-      './article.html',
-      './index.html',
-      offlineUrl
-    ]))
+      .then(cache => cache.addAll([
+        './js/main.js',
+        './js/article.js',
+        './images/newspaper.svg',
+        './css/site.css',
+        './data/latest.json',
+        './data/data-1.json',
+        './article.html',
+        './index.html',
+        offlineUrl
+      ]))
   );
 });
 
 function timeout(delay) {
-    return new Promise(function(resolve, reject) {
-        setTimeout(function(){
-          resolve(new Response('', {
-              status: 408,
-              statusText: 'Request timed out.'
-          }));
-        }, delay);
-    });
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve(new Response('', {
+        status: 408,
+        statusText: 'Request timed out.'
+      }));
+    }, delay);
+  });
 }
 
 function resolveFirstPromise(promises) {
@@ -41,6 +41,7 @@ function resolveFirstPromise(promises) {
       .catch(() => reject(Error("All failed")));
   });
 };
+
 
 self.addEventListener('fetch', function(event) {
 

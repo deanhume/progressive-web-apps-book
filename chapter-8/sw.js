@@ -45,9 +45,8 @@ function resolveFirstPromise(promises) {
 
 self.addEventListener('fetch', function(event) {
 
-  // if (/googleapis/.test(event.request.url)) {
-  if (/.json/.test(event.request.url)) {
-
+  // Check for the googleapis domain
+  if (/googleapis/.test(event.request.url)) {
     event.respondWith(
       resolveFirstPromise([
         timeout(500),

@@ -19,6 +19,7 @@ self.addEventListener('install', event => {
   );
 });
 
+// Handle network delays
 function timeout(delay) {
   return new Promise(function (resolve, reject) {
     setTimeout(function () {
@@ -88,3 +89,18 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
+
+// The sync event for the contact form
+self.addEventListener('sync', function (event) {
+  if (event.tag === 'contact-email') {
+    event.waitUntil(sendContactEmail());
+  }
+});
+
+// Send the contact email to the server
+function sendContactEmail() {
+  return fetch('./doge.png')
+  	    .then(function(response) {
+  	      return response;
+  	    });
+}

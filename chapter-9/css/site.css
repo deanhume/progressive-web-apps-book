@@ -23,3 +23,55 @@ p { width: 70%; margin: auto; text-align: center;padding-bottom: 20px; font-size
     h1 { text-align: center;font-size: 40px;font-family: 'Merriweather', cursive; margin-top: 0px;}
     #article-title { text-align: center; font-size: 40px; font-family: 'Merriweather', cursive; color: white;padding-top: 50px; }
 }
+
+.contact-form{
+  margin-top: 220px;
+  width: 100%;
+}
+
+input{
+  font-size: 16px;
+  padding: 12px 16px;
+  height: 58px;
+  width: 80%;
+  display: block;
+  border: 1px solid rgba(0,0,0,.12);
+  border-bottom-width: 2px;
+  border-bottom-color: #dedede;
+  background: #fff;
+  border-radius: 2px;
+}
+
+button{
+  background: 0 0;
+  border: none;
+  border-radius: 2px;
+  color: #000;
+  height: 58px;
+  margin: 6px 0 0;
+  width: 60%;
+  max-width: 60%;
+  padding: 0 16px;
+  display: inline-block;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: .025rem;
+  overflow: hidden;
+  will-change: box-shadow;
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1);
+  outline: 0;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  line-height: 58px;
+  -webkit-appearance: none;
+  color: black;
+  background-color: gold;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#container {
+  margin: 0 auto;
+  width: 80%;
+}

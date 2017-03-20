@@ -15,6 +15,7 @@
 </head>
 <body>
   <div id="offline"></div>
+  <div id="message"></div>
   <!-- header -->
   <div id="header">
     <img id="logo" src="./images/newspaper.svg" />
@@ -37,6 +38,12 @@
     </div>
   </div>
   <script>
+  function displayMessageNotification(){
+    var messageNotification = document.getElementById('message');
+    messageNotification.innerHTML = 'Message sent';
+    messageNotification.className = 'showMessageNotification';
+  }
+
   // Register the service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -44,10 +51,16 @@
     .then(registration => {
       document.getElementById('submit').addEventListener('click', () => {
         registration.sync.register('contact-email').then(() => {
-            console.log('Sync registered');
+            displayMessageNotification();
         });
       });
-    }
+    });
+  } else {
+    document.getElementById('submit').addEventListener('click', () => {
+      registration.sync.register('contact-email').then(() => {
+          displayMessageNotification();
+      });
+    });
   }
   </script>
 </body>

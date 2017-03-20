@@ -17,6 +17,7 @@ p { width: 70%; margin: auto; text-align: center;padding-bottom: 20px; font-size
 #logo-offline { margin-left: auto; margin-right: auto; width: 50px; display: block; padding-top: 125px; }
 
 .showOfflineNotification { background-color: black;height: 40px;color: white;text-align: center;padding-top: 20px;font-size: 20px;margin-top: 0px;position: absolute;top: 0;left: 0;right: 0;overflow: hidden;z-index: 101; }
+.showMessageNotification { background-color: black;height: 40px;color: white;text-align: center;padding-top: 20px;font-size: 20px;margin-top: 0px;position: absolute;bottom: 0;left: 0;right: 0;overflow: hidden;z-index: 101; }
 .hideOfflineNotification { display:none; }
 
 @media screen and (max-width: 550px) {

@@ -33,7 +33,10 @@ app.get('/offline', function (req, res) {
 
 // Send a message
 app.post('/sendMessage', function (req, res) {
+  console.log(req)
   console.log(req.body);
+
+  res.json('message sent');
 });
 
 // The server

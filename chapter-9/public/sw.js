@@ -1,3 +1,6 @@
+// Load the sw-toolbox library.
+importScripts('./js/idb-keyval.js');
+
 const cacheName = 'latestNews-v1';
 const offlineUrl = '/offline';
 
@@ -46,65 +49,57 @@ function resolveFirstPromise(promises) {
 
 self.addEventListener('fetch', function(event) {
 
-  // Check for the googleapis domain
-  if (/googleapis/.test(event.request.url)) {
-    event.respondWith(
-      resolveFirstPromise([
-        timeout(500),
-        fetch(event.request)
-      ])
-    );
-  }
+  // // Check for the googleapis domain
+  // if (/googleapis/.test(event.request.url)) {
+  //   event.respondWith(
+  //     resolveFirstPromise([
+  //       timeout(500),
+  //       fetch(event.request)
+  //     ])
+  //   );
+  // }
 
   // Else process all other requests as expected
-//   event.respondWith(
-//     caches.match(event.request)
-//     .then(function(response) {
-//       if (response) {
-//         return response;
-//       }
-//       var fetchRequest = event.request.clone();
+  //   event.respondWith(
+  //     caches.match(event.request)
+  //     .then(function(response) {
+  //       if (response) {
+  //         return response;
+  //       }
+  //       var fetchRequest = event.request.clone();
 
-//       return fetch(fetchRequest).then(
-//         function(response) {
-//           if(!response || response.status !== 200) {
-//             return response;
-//           }
+  //       return fetch(fetchRequest).then(
+  //         function(response) {
+  //           if(!response || response.status !== 200) {
+  //             return response;
+  //           }
 
-//           var responseToCache = response.clone();
-//           caches.open(cacheName)
-//           .then(function(cache) {
-//             cache.put(event.request, responseToCache);
-//           });
+  //           var responseToCache = response.clone();
+  //           caches.open(cacheName)
+  //           .then(function(cache) {
+  //             cache.put(event.request, responseToCache);
+  //           });
 
-//           return response;
-//         }
-//       ).catch(error => {
-//         // Check if the user is offline first and is trying to navigate to a web page
-//         if (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html')) {
-//           // Return the offline page
-//           return caches.match(offlineUrl);
-//         }
-//       });
-//     })
-//   );
- });
+  //           return response;
+  //         }
+  //       ).catch(error => {
+  //         // Check if the user is offline first and is trying to navigate to a web page
+  //         if (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html')) {
+  //           // Return the offline page
+  //           return caches.match(offlineUrl);
+  //         }
+  //       });
+  //     })
+  //   );
+});
 
 // The sync event for the contact form
 self.addEventListener('sync', function (event) {
   if (event.tag === 'contact-email') {
-    
-    idbKeyval.get('requestURL').then(val => console.log(val));
+    event.waitUntil(
+      idbKeyval.get('sendMessage')
+      .then(value => fetch('/sendMessage/', { method: 'POST', body: value })));
 
-
-    event.waitUntil(sendContactEmail());
-  }
-});
-
-// Send the contact email to the server
-function sendContactEmail() {
-  return fetch('./doge.png')
-  	    .then(function(response) {
-  	      return response;
-  	    });
-}
+      // Remove the value from the DB
+    }
+  });

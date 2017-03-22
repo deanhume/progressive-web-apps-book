@@ -44,13 +44,34 @@
     messageNotification.className = 'showMessageNotification';
   }
 
+  function sendMessage(){
+    var payload = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      subject: document.getElementById('subject').value,
+      message: document.getElementById('message').value,
+    };
+
+    var data = new FormData();
+    data.append( "json", JSON.stringify( payload ) );
+
+    fetch("/sendMessage/",
+    {
+        method: "POST",
+        body: data
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){ alert( JSON.stringify( data ) ) });
+  }
+
   // Register the service worker
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
     navigator.serviceWorker.register('./sw.js')
     .then(registration => navigator.serviceWorker.ready)
     .then(registration => {
       document.getElementById('submit').addEventListener('click', () => {
         registration.sync.register('contact-email').then(() => {
+            sendMessage();
             displayMessageNotification();
         });
       });
@@ -58,6 +79,7 @@
   } else {
     document.getElementById('submit').addEventListener('click', () => {
       registration.sync.register('contact-email').then(() => {
+          sendMessage();
           displayMessageNotification();
       });
     });

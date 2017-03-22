@@ -70,9 +70,6 @@
                 })
                 .then(function(subscription) {
 
-                  // TODO: Send the subscription subscription.endpoint
-                  // to your server and save it to send a push message
-                  // at a later date
                   var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
                   key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
                   var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';

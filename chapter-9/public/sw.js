@@ -97,9 +97,14 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('sync', function (event) {
   if (event.tag === 'contact-email') {
     event.waitUntil(
-      idbKeyval.get('sendMessage')
-      .then(value => fetch('/sendMessage/', { method: 'POST', body: value })));
+      idbKeyval.get('sendMessage').then(value =>
+        fetch('/sendMessage/', {
+          method: 'POST',
+          headers: new Headers({ 'content-type': 'application/json' }),
+          body: JSON.stringify(value)
+        })));
 
-      // Remove the value from the DB
-    }
-  });
+        // Remove the value from the DB
+        idbKeyval.delete('sendMessage');
+      }
+    });

@@ -1,6 +1,6 @@
 const express = require('express');
-var bodyParser = require('body-parser');
-var path = require('path');
+const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 
 // Express setup
@@ -33,10 +33,7 @@ app.get('/offline', function (req, res) {
 
 // Send a message
 app.post('/sendMessage', function (req, res) {
-  console.log(req)
-  console.log(req.body);
-
-  res.json('message sent');
+  res.json(`Message sent to ${req.body.email}`);
 });
 
 // The server

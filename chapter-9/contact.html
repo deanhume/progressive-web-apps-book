@@ -26,79 +26,38 @@
   <div id="container">
     <!-- contact form -->
     <div class="contact-form">
-      <input type="name" id="name" name="name" placeholder="Your Name">
+      <input type="text" id="name" name="name" placeholder="Your Name">
       <br>
-      <input type="email" id="email" name="email" placeholder="Email Address">
+      <input type="email" id="email" name="email" placeholder="Email Address" required>
       <br>
-      <input type="subject" id="subject" name="subject" placeholder="Subject">
+      <input type="text" id="subject" name="subject" placeholder="Subject">
       <br>
-      <input type="message" id="message" name="message" placeholder="Your Message">
+      <input type="text" id="message" name="message" placeholder="Your Message">
       <br>
       <button id="submit">Send</button>
     </div>
   </div>
   <script src="/js/idb-keyval.js" ></script>
+  <script src="/js/contact.js" ></script>
   <script>
-  function displayMessageNotification(){
-    var messageNotification = document.getElementById('message');
-    messageNotification.innerHTML = 'Message sent';
-    messageNotification.className = 'showMessageNotification';
-  }
-
-  function sendMessage(){
-    console.log('sendMessage');
-
-    var payload = {
-      name: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      subject: document.getElementById('subject').value,
-      message: document.getElementById('message').value,
-    };
-
-     var data = new FormData();
-     data.append( "json", JSON.stringify( payload ) );
-
-    // Send the POST request to the server
-    fetch('/sendMessage/',
-    {
-        method: "POST",
-        body: data
-    });
-  }
-
-  function saveToIndexDb(){
-    console.log('saveToIndexDb');
-
-    var payload = {
-      name: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      subject: document.getElementById('subject').value,
-      message: document.getElementById('message').value,
-    };
-
-    // Save to idb
-    idbKeyval.set('sendMessage', payload);
-  }
-
   // Register the service worker
-  // TEsting
-  // if ('serviceWorker' in navigator && 'SyncManager' in window) {
-  //   navigator.serviceWorker.register('./sw.js')
-  //   .then(registration => navigator.serviceWorker.ready)
-  //   .then(registration => {
-  //     document.getElementById('submit').addEventListener('click', () => {
-  //       registration.sync.register('contact-email').then(() => {
-  //           saveToIndexDb();
-  //           displayMessageNotification();
-  //       });
-  //     });
-  //   });
-  // } else {
-    document.getElementById('submit').addEventListener('click', () => {
-          sendMessage();
-          displayMessageNotification();
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
+    navigator.serviceWorker.register('./sw.js')
+    .then(registration => navigator.serviceWorker.ready)
+    .then(registration => {
+      document.getElementById('submit').addEventListener('click', () => {
+        registration.sync.register('contact-email').then(() => {            // The sync for the contact-email
+            queueMessage();                                                 // Queue the body of the message
+            displayMessageNotification('Message queued');
+        });
+      });
     });
-  //}
+  } else {
+    document.getElementById('submit').addEventListener('click', () => {
+          sendMessage();                                                  // Else fallback and send the actual message
+          displayMessageNotification('Message sent');
+    });
+  }
   </script>
 </body>
 </html>

@@ -49,48 +49,48 @@ function resolveFirstPromise(promises) {
 
 self.addEventListener('fetch', function(event) {
 
-  // // Check for the googleapis domain
-  // if (/googleapis/.test(event.request.url)) {
-  //   event.respondWith(
-  //     resolveFirstPromise([
-  //       timeout(500),
-  //       fetch(event.request)
-  //     ])
-  //   );
-  // }
+  // Check for the googleapis domain
+  if (/googleapis/.test(event.request.url)) {
+    event.respondWith(
+      resolveFirstPromise([
+        timeout(500),
+        fetch(event.request)
+      ])
+    );
+  } else {
 
   // Else process all other requests as expected
-  //   event.respondWith(
-  //     caches.match(event.request)
-  //     .then(function(response) {
-  //       if (response) {
-  //         return response;
-  //       }
-  //       var fetchRequest = event.request.clone();
+    event.respondWith(
+      caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        }
+        var fetchRequest = event.request.clone();
 
-  //       return fetch(fetchRequest).then(
-  //         function(response) {
-  //           if(!response || response.status !== 200) {
-  //             return response;
-  //           }
+        fetch(fetchRequest).then(
+          function(response) {
+            if(!response || response.status !== 200) {
+              return response;
+            }
 
-  //           var responseToCache = response.clone();
-  //           caches.open(cacheName)
-  //           .then(function(cache) {
-  //             cache.put(event.request, responseToCache);
-  //           });
+            var responseToCache = response.clone();
+            caches.open(cacheName)
+            .then(function(cache) {
+              cache.put(event.request, responseToCache);
+            });
 
-  //           return response;
-  //         }
-  //       ).catch(error => {
-  //         // Check if the user is offline first and is trying to navigate to a web page
-  //         if (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html')) {
-  //           // Return the offline page
-  //           return caches.match(offlineUrl);
-  //         }
-  //       });
-  //     })
-  //   );
+            return response;
+          }
+        ).catch(error => {
+          // Check if the user is offline first and is trying to navigate to a web page
+          if (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html')) {
+            // Return the offline page
+            caches.match(offlineUrl);
+          }
+        });
+      })
+    )}
 });
 
 // The sync event for the contact form

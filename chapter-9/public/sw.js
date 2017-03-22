@@ -92,9 +92,11 @@ self.addEventListener('fetch', function(event) {
 
 // The sync event for the contact form
 self.addEventListener('sync', function (event) {
-  console.log(event);
-
   if (event.tag === 'contact-email') {
+    
+    idbKeyval.get('requestURL').then(val => console.log(val));
+
+
     event.waitUntil(sendContactEmail());
   }
 });

@@ -26,11 +26,14 @@ app.get('/contact', function (req, res) {
   res.sendFile(path.join(__dirname + '/contact.html'));
 });
 
+// Offline page
+app.get('/offline', function (req, res) {
+  res.sendFile(path.join(__dirname + '/offline-page.html'));
+});
+
 // Send a message
 app.post('/sendMessage', function (req, res) {
-
   console.log(req.body);
-
 });
 
 // The server

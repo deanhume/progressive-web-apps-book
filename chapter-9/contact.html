@@ -71,7 +71,7 @@
     .then(registration => {
       document.getElementById('submit').addEventListener('click', () => {
         registration.sync.register('contact-email').then(() => {
-            sendMessage();
+          console.log('sync resigtered');
             displayMessageNotification();
         });
       });

@@ -30,13 +30,12 @@ function sendMessage(){
   };
 
   // Send the POST request to the server
-  fetch('/sendMessage/',
-  {
-      method: "POST",
-      headers: new Headers({
-        'content-type': 'application/json'
-      }),
-      body: JSON.stringify(payload)
+  fetch('/sendMessage/', {
+    method: 'post',
+    headers: new Headers({
+      'content-type': 'application/json'
+    }),
+    body: JSON.stringify(payload)
   });
 }
 

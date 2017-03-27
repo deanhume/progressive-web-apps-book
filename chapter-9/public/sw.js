@@ -59,7 +59,7 @@ self.addEventListener('fetch', function(event) {
     );
   } else {
 
-  // Else process all other requests as expected
+    // Else process all other requests as expected
     event.respondWith(
       caches.match(event.request)
       .then(function(response) {
@@ -91,7 +91,7 @@ self.addEventListener('fetch', function(event) {
         });
       })
     )}
-});
+  });
 
 // The sync event for the contact form
 self.addEventListener('sync', function (event) {
@@ -106,5 +106,5 @@ self.addEventListener('sync', function (event) {
 
         // Remove the value from the DB
         idbKeyval.delete('sendMessage');
-      }
-    });
+    }
+});

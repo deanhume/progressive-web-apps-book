@@ -12,39 +12,6 @@ function retrieveData(url) {
   xhttp.send();
 }
 
-// function retrieveData(url) {
-// fetch(url).then(response => {
-//   var reader = response.body.getReader();
-//   var bytesReceived = 0;
-
-//   reader.read().then(function processResult(result) {
-//     if (result.done) {
-//       console.log("Fetch complete",result);
-//        buildWebPage(result);
-//       return;
-//     }
-
-//     bytesReceived += result.value.length;
-//     console.log('Received', bytesReceived, 'bytes of data so far');
-
-//     // Read some more, and call this function again
-//     return reader.read().then(processResult);
-//   });
-// });
-// }
-
-// Get a value from the querystring
-function findGetParameter(parameterName) {
-  var result = null,
-  tmp = [];
-  var items = location.search.substr(1).split("&");
-  for (var index = 0; index < items.length; index++) {
-    tmp = items[index].split("=");
-    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-  }
-  return result;
-}
-
 // Load the latest news data and populate content
 function loadLatestNews(){
   var dataUrl = './data/latest.json';

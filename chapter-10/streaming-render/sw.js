@@ -7,15 +7,10 @@ self.addEventListener('install', event => {
     caches.open(cacheName)
     .then(cache => cache.addAll([
       './js/main.js',
-      './js/article.js',
       './images/newspaper.svg',
       './css/site.css',
-      './data/latest.json',
-      './data/data-1.json',
-      './article.html',
-      './index.html',
-      './article-header.html',
-      './article-footer.html',
+      './header.html',
+      './footer.html',
       offlineUrl
     ]))
   );
@@ -53,11 +48,9 @@ function streamArticle(url) {
   }
   const stream = new ReadableStream({
     start(controller) {
-      // const contentURL = new URL(url);
-      // contentURL.pathname += '.middle.inc';
-      const startFetch = caches.match('./article-header.html');
+      const startFetch = caches.match('./header.html');
       const bodyData = fetch(`./data/${url}.html`).catch(() => new Response('Body fetch failed'));
-      const endFetch = caches.match('./article-footer.html');
+      const endFetch = caches.match('./footer.html');
 
       function pushStream(stream) {
         const reader = stream.getReader();
@@ -86,17 +79,13 @@ function streamArticle(url) {
   })
 }
 
-// Get a value from the querystring
-function findGetParameter(parameterName) {
-  var result = null,
-  tmp = [];
-  var items = location.search.substr(1).split("&");
-  for (var index = 0; index < items.length; index++) {
-    tmp = items[index].split("=");
-    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-  }
-  return result;
-}
+// Get the value from the querystring
+function getQueryString ( field, url ) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
+};
 
 
 self.addEventListener('fetch', function (event) {
@@ -104,7 +93,18 @@ self.addEventListener('fetch', function (event) {
   // Check for the json file
   if (/article.html/.test(event.request.url)) {
 
-    event.respondWith(streamArticle('data-1'));
+    // Get the ID of the article
+    const articleId = getQueryString('id', event.request.url);
+
+    // Get the URL of the article
+    const articleUrl = `data-${articleId}`;
+
+    // Respond with a stream
+    event.respondWith(streamArticle(articleUrl));
+
+  } else if (/index.html/.test(event.request.url)){
+    // Respond with a stream
+    event.respondWith(streamArticle(event.request.url));
 
   } else if (/googleapis/.test(event.request.url)) {
 

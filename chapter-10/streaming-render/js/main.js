@@ -1,40 +1,5 @@
 var offlineNotification = document.getElementById('offline');
 
-function retrieveData(url) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var result = JSON.parse(this.responseText);
-        buildWebPage(result);
-    }
-  };
-  xhttp.open('GET', url, true);
-  xhttp.send();
-}
-
-// Load the latest news data and populate content
-function loadLatestNews(){
-  var dataUrl = './data/latest.json';
-  var result = retrieveData(dataUrl);
-}
-
-function buildWebPage(result) {
-  // Build up our HTML
-  var latestNews = '';
-
-  // Loop through the results
-  for (var i = 0; i < result.latestNews.length; i++) {
-
-    var title = '<h2><a href="./article.html?id=' + result.latestNews[i].id + '">' + result.latestNews[i].title + '</a></h2>';
-    var description = '<p>' + result.latestNews[i].description + '</p>'
-
-    latestNews += title + description;
-  }
-
-  // Update the DOM with the data
-  document.getElementById('latest').innerHTML = latestNews;
-}
-
 // Show an offline notification if the user if offline
 function showIndicator() {
   offlineNotification.innerHTML = 'You are currently offline.';
@@ -49,5 +14,3 @@ function hideIndicator() {
 // Update the online status icon based on connectivity
 window.addEventListener('online',  hideIndicator);
 window.addEventListener('offline', showIndicator);
-
-loadLatestNews();

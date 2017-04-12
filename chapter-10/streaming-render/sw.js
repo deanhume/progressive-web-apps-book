@@ -13,7 +13,16 @@ self.addEventListener('install', event => {
       './footer.html',
       offlineUrl
     ]))
+    .then(function() {
+      // Force the current service worker to become the active one
+      return self.skipWaiting();
+    })
   );
+});
+
+// We want the service worker to start controlling as soon as possible
+self.addEventListener('activate', function(event) {
+	return self.clients.claim();
 });
 
 function timeout(delay) {
@@ -103,8 +112,11 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(streamArticle(articleUrl));
 
   } else if (/index.html/.test(event.request.url)){
+
+    const indexUrl = 'data-index';
+
     // Respond with a stream
-    event.respondWith(streamArticle(event.request.url));
+    event.respondWith(streamArticle(indexUrl));
 
   } else if (/googleapis/.test(event.request.url)) {
 

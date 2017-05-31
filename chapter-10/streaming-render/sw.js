@@ -3,6 +3,9 @@ const offlineUrl = 'offline-page.html';
 
 // Cache our known resources during install
 self.addEventListener('install', event => {
+  // Force the current service worker to become the active one
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(cacheName)
     .then(cache => cache.addAll([
@@ -13,16 +16,12 @@ self.addEventListener('install', event => {
       './footer.html',
       offlineUrl
     ]))
-    .then(function() {
-      // Force the current service worker to become the active one
-      return self.skipWaiting();
-    })
   );
 });
 
 // We want the service worker to start controlling as soon as possible
 self.addEventListener('activate', function(event) {
-	return self.clients.claim();
+	self.clients.claim();
 });
 
 function timeout(delay) {
@@ -89,21 +88,21 @@ function streamArticle(url) {
 }
 
 // Get the value from the querystring
-function getQueryString ( field, url ) {
-    var href = url ? url : window.location.href;
+function getQueryString ( field, url = window.location.href ) {
     var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
-    var string = reg.exec(href);
+    var string = reg.exec(url);
     return string ? string[1] : null;
 };
 
 
 self.addEventListener('fetch', function (event) {
 
-  // Check for the json file
-  if (/article.html/.test(event.request.url)) {
+  const url = new URL(event.request.url);
+
+  if (url.pathname.endsWith('/article.html')) {
 
     // Get the ID of the article
-    const articleId = getQueryString('id', event.request.url);
+    const articleId = getQueryString('id');
 
     // Get the URL of the article
     const articleUrl = `data-${articleId}`;
@@ -111,7 +110,7 @@ self.addEventListener('fetch', function (event) {
     // Respond with a stream
     event.respondWith(streamArticle(articleUrl));
 
-  } else if (/index.html/.test(event.request.url)){
+  } else if (url.pathname.endsWith('/index.html')) {
 
     const indexUrl = 'data-index';
 

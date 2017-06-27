@@ -30,29 +30,11 @@ function timeout(delay) {
   });
 }
 
-function resolveFirstPromise(promises) {
-  return new Promise((resolve, reject) => {
-
-    promises = promises.map(p => Promise.resolve(p));
-
-    promises.forEach(p => p.then(resolve));
-
-    promises.reduce((a, b) => a.catch(() => b))
-    .catch(() => reject(Error("All failed")));
-  });
-};
-
-
 self.addEventListener('fetch', function(event) {
 
   // Check for the googleapis domain
   if (/googleapis/.test(event.request.url)) {
-    return event.respondWith(
-      resolveFirstPromise([
-        timeout(500),
-        fetch(event.request)
-      ])
-    );
+    return event.respondWith(Promise.race([timeout(3000),fetch(event.request.url)]));
   }
 
   // Else process all other requests as expected

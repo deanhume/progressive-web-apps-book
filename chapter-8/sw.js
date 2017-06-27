@@ -62,9 +62,9 @@ self.addEventListener('fetch', function(event) {
       if (response) {
         return response;
       }
-      var fetchRequest = event.request.clone();
+      var requestToCache = event.request.clone();
 
-      return fetch(fetchRequest).then(
+      return fetch(requestToCache).then(
         function(response) {
           if(!response || response.status !== 200) {
             return response;
@@ -73,7 +73,7 @@ self.addEventListener('fetch', function(event) {
           var responseToCache = response.clone();
           caches.open(cacheName)
           .then(function(cache) {
-            cache.put(event.request, responseToCache);
+            cache.put(requestToCache, responseToCache);
           });
 
           return response;

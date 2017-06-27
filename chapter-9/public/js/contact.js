@@ -30,7 +30,7 @@ function sendMessage(){
   };
 
   // Send the POST request to the server
-  fetch('/sendMessage/', {
+  return fetch('/sendMessage/', {
     method: 'post',
     headers: new Headers({
       'content-type': 'application/json'

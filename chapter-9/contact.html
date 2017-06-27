@@ -54,8 +54,9 @@
     });
   } else {
     document.getElementById('submit').addEventListener('click', () => {
-          sendMessage();                                                  // Else fallback and send the actual message
-          displayMessageNotification('Message sent');
+          sendMessage()     // Else fallback and send the actual message
+          .then(displayMessageNotification('Message sent'))
+          .catch(err => { displayMessageNotification('Message failed') });
     });
   }
   </script>

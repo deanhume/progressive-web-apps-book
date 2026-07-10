@@ -68,7 +68,7 @@ self.addEventListener('fetch', function(event) {
         }
         var fetchRequest = event.request.clone();
 
-        fetch(fetchRequest).then(
+        return fetch(fetchRequest).then(
           function(response) {
             if(!response || response.status !== 200) {
               return response;
@@ -86,7 +86,7 @@ self.addEventListener('fetch', function(event) {
           // Check if the user is offline first and is trying to navigate to a web page
           if (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html')) {
             // Return the offline page
-            caches.match(offlineUrl);
+            return caches.match(offlineUrl);
           }
         });
       })
